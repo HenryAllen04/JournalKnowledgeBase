@@ -4,11 +4,11 @@ Follow each component in order. Mark tasks complete as you go (✅/⬜).
 
 1. Repository & Tooling
 
-⬜ Create GitHub repo life-kb and push main branch
+(done) Create GitHub repo life-kb and push main branch
 
 ⬜ Add .editorconfig, .prettierrc, and ESLint config
 
-⬜ Enable Dependabot security updates
+(Done) Enable Dependabot security updates
 
 ⬜ Configure GitHub Actions with basic lint/test workflow
 
