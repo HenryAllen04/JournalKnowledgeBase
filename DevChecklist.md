@@ -14,13 +14,14 @@ Follow each component in order. Mark tasks complete as you go (✅/⬜).
 
 2. Supabase Foundation
 
-⬜ Spin up Supabase project in preferred region
+✅ Spin up Supabase project in preferred region
 
-⬜ Create tables entry, tag, entry_tag with Row‑Level Security
+✅ Create tables entry, tag, entry_tag with Row‑Level Security
 
-⬜ Set up Storage bucket media
+✅ Set up Storage bucket media
 
 ⬜ Write first Edge Function hello.ts and deploy via CLI
+(Note: Need Docker Desktop installed to deploy Edge Functions)
 
 3. Expo App Skeleton
 
