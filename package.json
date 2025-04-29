@@ -1,0 +1,32 @@
+{
+  "name": "life-kb",
+  "version": "0.1.0",
+  "description": "A lifelong memory companion and personal knowledge base",
+  "main": "index.js",
+  "scripts": {
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
+    "lint:fix": "eslint . --ext .js,.jsx,.ts,.tsx --fix",
+    "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md}\"",
+    "test": "echo \"No tests yet\" && exit 0"
+  },
+  "keywords": [
+    "knowledge-base",
+    "personal-assistant",
+    "memory",
+    "vector-search"
+  ],
+  "author": "Henry Allen",
+  "license": "MIT",
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.62.0",
+    "@typescript-eslint/parser": "^5.62.0",
+    "eslint": "^8.47.0",
+    "eslint-config-prettier": "^8.10.0",
+    "eslint-plugin-prettier": "^5.0.0",
+    "eslint-plugin-react": "^7.33.2",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-native": "^4.0.0",
+    "prettier": "^3.0.2",
+    "typescript": "^5.1.6"
+  }
+} 

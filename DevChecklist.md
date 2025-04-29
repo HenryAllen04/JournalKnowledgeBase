@@ -4,13 +4,13 @@ Follow each component in order. Mark tasks complete as you go (✅/⬜).
 
 1. Repository & Tooling
 
-(done) Create GitHub repo life-kb and push main branch
+✅ Create GitHub repo life-kb and push main branch
 
-⬜ Add .editorconfig, .prettierrc, and ESLint config
+✅ Add .editorconfig, .prettierrc, and ESLint config
 
-(Done) Enable Dependabot security updates
+✅ Enable Dependabot security updates
 
-⬜ Configure GitHub Actions with basic lint/test workflow
+✅ Configure GitHub Actions with basic lint/test workflow
 
 2. Supabase Foundation
 
@@ -24,7 +24,7 @@ Follow each component in order. Mark tasks complete as you go (✅/⬜).
 
 3. Expo App Skeleton
 
-⬜ Initialise Expo SDK 53 project (expo init)
+⬜ Initialise Expo SDK 53 project (expo init)
 
 ⬜ Install Supabase JS client
 
