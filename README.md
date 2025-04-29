@@ -1,88 +1,68 @@
-# LifeKB – Mobile Semantic Journal (MVP)
+# LifeKB – Project Vision and Technical Blueprint
 
-A **React‑Native + Expo** app that lets you capture diary entries and search them later with natural‑language questions.  The goal of v0.1 is to prove the core loop:
+## Vision
+LifeKB is a **lifelong memory companion**: a private, self-owned record of thoughts, events, and media that grows richer the more you use it. Over time it evolves from a simple journal into a personal knowledge base—a source you can query for insights, recall forgotten details, and observe long-term patterns in health, learning, and wellbeing. A well-crafted, longitudinal store of your life lets you learn from past decisions, spot correlations you would otherwise miss, and hand future-you the gift of accurate memory.
 
-> *Capture → Embed → Search → Recall*
+## Core Idea (MVP)
+1. **Seamless capture** – type, dictate, or snap a photo and save in under ten seconds.
+2. **Immediate enrichment** – each new entry is transcribed (if audio), embedded as a vector, tagged with metadata, and stored.
+3. **Natural retrieval** – ask questions in plain language or run a semantic search to resurface any moment.
+4. **Data sovereignty** – raw text and media stay in your database; only anonymised embeddings live in the vector store.
 
----
+## Chosen Tech Stack
 
-## 🌱 Core idea
+### What is OpenAI Whisper?
+> **Whisper** is OpenAI’s speech-to-text model. Feed it an audio file (e.g., a voice journal) and it returns an accurate text transcript. In LifeKB it enables hands-free dictation: the app records audio, the backend calls Whisper, and the resulting text becomes searchable like any typed entry.
 
-1. **Friction‑free capture** on your phone (text or voice).
-2. **Semantic indexing**: every entry is embedded with OpenAI and stored in **Pinecone**.
-3. **Fast retrieval**: queries hit Pinecone, fetch matching rows from **Supabase Postgres**, and stream answers via an OpenAI Assistant.
+| Layer | Technology | Purpose |
+|-------|------------|---------|
+| **Front-end** | React Native + Expo (free tier) | Cross-platform mobile delivery |
+| **Backend** | Supabase Edge Functions (TypeScript) + Postgres | Auth, storage, relational queries |
+| **Vector DB** | Pinecone **Serverless** | Fast, filterable similarity search |
+| **LLM Layer** | OpenAI Assistants API | Embeddings, Whisper transcription, chat answers |
+| **Storage** | Supabase Storage | Media files (audio, photos) |
 
-That’s it—no analytics, automations, or wearables until the loop feels delightful.
-
----
-
-## 🛠 Tech stack (v0.1)
-
-| Layer            | Choice                                                        | Why                                     |
-| ---------------- | ------------------------------------------------------------- | --------------------------------------- |
-| **Mobile UI**    | React‑Native (Expo SDK 53)                                    | One codebase, free cloud builds         |
-| **Backend/API**  | Supabase **Edge Functions** (TypeScript)                      | Instant Postgres + Auth + Storage       |
-| **Database**     | Supabase **Postgres**                                         | Structured metadata, Row Level Security |
-| **Vector Store** | **Pinecone Serverless**                                       | Low‑ops similarity search               |
-| **LLM services** | **OpenAI**: Whisper, `text-embedding-3-small`, Assistants API | Best speech + RAG combo                 |
-
-Everything sits comfortably on free tiers until you onboard testers.
-
----
-
-## 🗺 High‑level architecture
+## High-Level Flow
+1. **Create** – User makes an entry in the app.
+2. **Enrich** – Edge Function calls Whisper (if audio) ➜ gets transcript ➜ calls embeddings ➜ receives vector.
+3. **Persist** – Function inserts a row in Postgres and upserts the vector in Pinecone, keyed by row ID.
+4. **Retrieve** – For search, backend embeds the query, queries Pinecone, fetches matching rows from Postgres, and returns them or streams an Assistant chat response.
 
 ```mermaid
-flowchart TD
-  %% Mobile side
-  RN["React-Native App"]
-  %% Cloud side
-  subgraph Cloud
-    Supa["Supabase Edge"]
-    PG[(Postgres)]
-    Pine[Pinecone]
-    OA[(OpenAI)]
-  end
+sequenceDiagram
+    participant App as React-Native
+    participant Edge as Supabase Edge
+    participant PG as Postgres
+    participant Pine as Pinecone
+    participant OA as Whisper/Embeddings
 
-  %% Capture path
-  RN --|"Capture"|--> Supa
-  Supa --|"INSERT"|--> PG
-  Supa --|"Whisper + Embed"|--> OA
-  OA --|"Embeddings & Transcript"|--> Supa
-  Supa --|"Upsert Vector"|--> Pine
-
-  %% Retrieval path
-  RN --|"Search / Chat"|--> Supa
-  Supa --|"Vector Query"|--> Pine
-  Supa --|"Metadata Query"|--> PG
-  Supa -->> RN
+    App->>Edge: New entry (text/voice/photo)
+    Edge->>OA: Whisper + Embedding
+    OA-->>Edge: {transcript?, vector}
+    Edge->>PG: INSERT entry
+    Edge->>Pine: Upsert vector
+    App->>Edge: Search "NAD+"
+    Edge->>Pine: Query vector
+    Pine-->>Edge: Top-K IDs
+    Edge->>PG: SELECT * WHERE id IN (...)
+    PG-->>Edge: Rows
+    Edge-->>App: Results / streamed chat
 ```
 
+## Why This Matters
+* **Memory externalisation** – frees cognitive load and reduces decision regret.
+* **Pattern visibility** – multi-year trends in mood, sleep, or relationships surface only with consistent recording.
+* **Future-proofing** – owning your history in open formats guards against platform churn.
+* **Ethical AI** – local-first design and minimal data to cloud services respect user privacy while enabling powerful retrieval.
+
+## Next Steps (Development)
+| Weekend | Goal |
+|----------|------|
+| **1** | Set up repo, Supabase project, bare entry form |
+| **2** | Add Whisper + embeddings, store in Pinecone |
+| **3** | Implement semantic search endpoint and basic result list |
+| **4** | Add chat interface using OpenAI Assistants + Pinecone tool |
+| **5** | Polish UI, export feature, prepare Android APK |
+
 ---
-
-## 🔑 Environment variables
-
-```dotenv
-SUPABASE_URL=...
-SUPABASE_ANON_KEY=...
-OPENAI_API_KEY=...
-PINECONE_API_KEY=...
-PINECONE_ENVIRONMENT=...
-```
-
----
-
-## 📦 Minimal setup steps
-
-1. **Accounts** – Create Supabase, Pinecone, and OpenAI accounts; paste keys into `.env`.
-2. **Clone & run**
-   ```bash
-   git clone https://github.com/yourname/life-kb.git
-   cd life-kb
-   npm install
-   npx expo start
-   ```
-3. **Edge deploy** – `supabase functions deploy entries search`.
-
-Once you can **save** an entry and **find** it via the search bar, the MVP goal is met.
-
+*Built with ❤️ by **Your Name***
