@@ -18,13 +18,13 @@ That’s it—no analytics, automations, or wearables until the loop feels delig
 
 ## 🛠 Tech stack (v0.1)
 
-| Layer | Choice | Why |
-|-------|--------|-----|
-| **Mobile UI** | React‑Native (Expo SDK 53) | One codebase, free cloud builds |
-| **Backend/API** | Supabase **Edge Functions** (TypeScript) | Instant Postgres + Auth + Storage |
-| **Database** | Supabase **Postgres** | Structured metadata, Row Level Security |
-| **Vector Store** | **Pinecone Serverless** | Low‑ops similarity search |
-| **LLM services** | **OpenAI**: Whisper, `text-embedding-3-small`, Assistants API | Best speech + RAG combo |
+| Layer            | Choice                                                        | Why                                     |
+| ---------------- | ------------------------------------------------------------- | --------------------------------------- |
+| **Mobile UI**    | React‑Native (Expo SDK 53)                                    | One codebase, free cloud builds         |
+| **Backend/API**  | Supabase **Edge Functions** (TypeScript)                      | Instant Postgres + Auth + Storage       |
+| **Database**     | Supabase **Postgres**                                         | Structured metadata, Row Level Security |
+| **Vector Store** | **Pinecone Serverless**                                       | Low‑ops similarity search               |
+| **LLM services** | **OpenAI**: Whisper, `text-embedding-3-small`, Assistants API | Best speech + RAG combo                 |
 
 Everything sits comfortably on free tiers until you onboard testers.
 
@@ -34,25 +34,27 @@ Everything sits comfortably on free tiers until you onboard testers.
 
 ```mermaid
 flowchart TD
-  subgraph Mobile
-    RN[React‑Native App]
-  end
+  %% Mobile side
+  RN["React-Native App"]
+  %% Cloud side
   subgraph Cloud
-    Supa[Supabase Edge]
+    Supa["Supabase Edge"]
     PG[(Postgres)]
     Pine[Pinecone]
     OA[(OpenAI)]
   end
 
-  RN --|Capture| Supa
-  Supa --|INSERT| PG
-  Supa --|Whisper + Embed| OA
-  OA --|Embeddings & Transcript| Supa
-  Supa --|Upsert Vector| Pine
+  %% Capture path
+  RN --|"Capture"|--> Supa
+  Supa --|"INSERT"|--> PG
+  Supa --|"Whisper + Embed"|--> OA
+  OA --|"Embeddings & Transcript"|--> Supa
+  Supa --|"Upsert Vector"|--> Pine
 
-  RN --|Search / Chat| Supa
-  Supa --> Pine
-  Supa --> PG
+  %% Retrieval path
+  RN --|"Search / Chat"|--> Supa
+  Supa --|"Vector Query"|--> Pine
+  Supa --|"Metadata Query"|--> PG
   Supa -->> RN
 ```
 
@@ -83,5 +85,4 @@ PINECONE_ENVIRONMENT=...
 3. **Edge deploy** – `supabase functions deploy entries search`.
 
 Once you can **save** an entry and **find** it via the search bar, the MVP goal is met.
-
 
