@@ -1,0 +1,21 @@
+# Node modules
+node_modules/
+
+# Build artifacts
+dist/
+build/
+
+# Dependency lock files
+package-lock.json
+yarn.lock
+
+# Configuration files
+.github/
+.editorconfig
+.prettierrc
+*.config.js
+*.config.json
+
+# Documentation
+*.md
+docs/ 
