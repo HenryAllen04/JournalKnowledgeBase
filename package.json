@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "description": "A lifelong memory companion and personal knowledge base",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
     "lint:fix": "eslint . --ext .js,.jsx,.ts,.tsx --fix",
@@ -22,6 +23,8 @@
     "react-native": "^0.73.6"
   },
   "devDependencies": {
+    "@eslint/eslintrc": "^3.0.0",
+    "@eslint/js": "^9.0.0",
     "@typescript-eslint/eslint-plugin": "^5.62.0",
     "@typescript-eslint/parser": "^5.62.0",
     "eslint": "^8.47.0",
@@ -31,6 +34,6 @@
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-native": "^4.0.0",
     "prettier": "^3.0.2",
-    "typescript": "~5.1.6"
+    "typescript": "^5.1.6"
   }
-} 
+}
