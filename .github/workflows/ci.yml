@@ -18,6 +18,8 @@ jobs:
   lint-and-test:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
+    # Add a timeout to prevent workflow from running too long
+    timeout-minutes: 5
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -38,6 +40,8 @@ jobs:
       # Run ESLint
       - name: Run ESLint
         run: npx eslint . --ext .js,.jsx,.ts,.tsx
+        # Add timeout to ESLint step
+        timeout-minutes: 2
 
       # Run tests (when you add them)
       - name: Run tests

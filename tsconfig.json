@@ -18,6 +18,12 @@
       "*": ["*"]
     }
   },
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "App.tsx",
+    "index.tsx"
+  ],
   "exclude": [
     "node_modules",
     "babel.config.js",
