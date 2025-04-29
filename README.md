@@ -65,4 +65,4 @@ sequenceDiagram
 | **5** | Polish UI, export feature, prepare Android APK |
 
 ---
-*Built with ❤️ by **Your Name***
+*Built with ❤️ by ***Henry Allen***
