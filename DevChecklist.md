@@ -1,4 +1,4 @@
-*## Action Checklist
+## Action Checklist
 
 Follow each component in order. Mark tasks complete as you go (✅/⬜).
 
