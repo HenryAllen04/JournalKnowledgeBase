@@ -1,8 +1,10 @@
 -- Create necessary tables for LifeKB
 -- This migration sets up the initial schema with Row-Level Security
 
--- Enable Row-Level Security extension if not already enabled
+-- Enable extensions
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+-- Enable pgvector extension for vector embeddings
+CREATE EXTENSION IF NOT EXISTS vector;
 
 -- Create a table to store entries
 CREATE TABLE IF NOT EXISTS public.entry (
@@ -110,7 +112,4 @@ CREATE POLICY "Users can delete their own entry_tags"
 CREATE INDEX IF NOT EXISTS entry_user_id_idx ON public.entry(user_id);
 CREATE INDEX IF NOT EXISTS tag_user_id_idx ON public.tag(user_id);
 CREATE INDEX IF NOT EXISTS entry_tag_entry_id_idx ON public.entry_tag(entry_id);
-CREATE INDEX IF NOT EXISTS entry_tag_tag_id_idx ON public.entry_tag(tag_id);
-
--- Enable pgvector extension for vector embeddings
-CREATE EXTENSION IF NOT EXISTS vector; 
+CREATE INDEX IF NOT EXISTS entry_tag_tag_id_idx ON public.entry_tag(tag_id); 

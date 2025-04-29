@@ -20,8 +20,8 @@ Follow each component in order. Mark tasks complete as you go (✅/⬜).
 
 ✅ Set up Storage bucket media
 
-⬜ Write first Edge Function hello.ts and deploy via CLI
-(Note: Need Docker Desktop installed to deploy Edge Functions)
+✅  Write first Edge Function hello.ts and deploy via CLI
+(Note: Needed Docker Desktop installed to deploy Edge Functions)
 
 3. Expo App Skeleton
 
