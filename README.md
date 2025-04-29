@@ -34,26 +34,26 @@ Everything sits comfortably on free tiers until you onboard testers.
 
 ```mermaid
 flowchart TD
-    subgraph Mobile
-      RN[React‑Native App]
-    end
-    subgraph Cloud
-      Supa[Supabase Edge]
-      PG[(Postgres)]
-      Pine[Pinecone]
-      OA[(OpenAI)]
-    end
+  subgraph Mobile
+    RN[React‑Native App]
+  end
+  subgraph Cloud
+    Supa[Supabase Edge]
+    PG[(Postgres)]
+    Pine[Pinecone]
+    OA[(OpenAI)]
+  end
 
-    RN -- Capture -> Supa
-    Supa -- INSERT --> PG
-    Supa -- Whisper+Embed --> OA
-    OA --> Supa
-    Supa --> Pine
+  RN --|Capture| Supa
+  Supa --|INSERT| PG
+  Supa --|Whisper + Embed| OA
+  OA --|Embeddings & Transcript| Supa
+  Supa --|Upsert Vector| Pine
 
-    RN -- Search/Chat --> Supa
-    Supa --> Pine
-    Supa --> PG
-    Supa --> RN
+  RN --|Search / Chat| Supa
+  Supa --> Pine
+  Supa --> PG
+  Supa -->> RN
 ```
 
 ---
@@ -83,4 +83,5 @@ PINECONE_ENVIRONMENT=...
 3. **Edge deploy** – `supabase functions deploy entries search`.
 
 Once you can **save** an entry and **find** it via the search bar, the MVP goal is met.
+
 
