@@ -21,14 +21,19 @@ export default function AuthScreen() {
 
     try {
       setIsLoading(true);
-      const { error } = await supabase.auth.signInWithPassword({
+      const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
 
       if (error) throw error;
       
-      // Navigation will happen automatically via the auth state listener
+      console.log('Sign in successful:', data.session ? 'Has session' : 'No session');
+      
+      // Explicitly navigate after successful sign in
+      if (data.session) {
+        router.replace('/(tabs)');
+      }
     } catch (error: any) {
       console.error('Sign in error:', error);
       Alert.alert('Error', error.message || 'Failed to sign in');
@@ -45,18 +50,25 @@ export default function AuthScreen() {
 
     try {
       setIsLoading(true);
-      const { error } = await supabase.auth.signUp({
+      const { data, error } = await supabase.auth.signUp({
         email,
         password,
       });
 
       if (error) throw error;
       
-      Alert.alert(
-        'Success', 
-        'Account created successfully! Please check your email for verification instructions.',
-        [{ text: 'OK', onPress: () => setIsSignUp(false) }]
-      );
+      console.log('Sign up result:', data);
+      
+      if (data.session) {
+        // User was auto-signed in (if email confirmation is disabled)
+        router.replace('/(tabs)');
+      } else {
+        Alert.alert(
+          'Success', 
+          'Account created successfully! Please check your email for verification instructions.',
+          [{ text: 'OK', onPress: () => setIsSignUp(false) }]
+        );
+      }
     } catch (error: any) {
       console.error('Sign up error:', error);
       Alert.alert('Error', error.message || 'Failed to sign up');

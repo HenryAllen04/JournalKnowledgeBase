@@ -1,5 +1,6 @@
 # LifeKB - Your Personal Knowledge Base
 
+
 This is an [Expo](https://expo.dev) project created for the LifeKB personal knowledge base app, built with Supabase for authentication and data storage.
 
 ## Expo App Skeleton

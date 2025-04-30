@@ -4,40 +4,32 @@ import { StatusBar } from 'expo-status-bar';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { Colors } from '@/constants/Colors';
 import { supabase } from '@/lib/supabase';
-import { useRouter } from 'expo-router';
+import { router } from 'expo-router';
+import { useAuth } from '@/contexts/AuthContext';
 
 export default function SettingsScreen() {
   const colorScheme = useColorScheme();
-  const router = useRouter();
+  const { user } = useAuth();
   const [notifications, setNotifications] = useState(true);
   const [nightMode, setNightMode] = useState(false);
-  const [isSignedIn, setIsSignedIn] = useState(false); // This would be determined by checking auth state
-
-  // Check if user is signed in
-  React.useEffect(() => {
-    const checkAuth = async () => {
-      const session = await supabase.auth.getSession();
-      setIsSignedIn(!!session.data.session);
-    };
-    
-    checkAuth();
-    
-    // Listen for auth changes
-    const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
-      setIsSignedIn(!!session);
-    });
-    
-    return () => {
-      authListener.subscription.unsubscribe();
-    };
-  }, []);
+  const [isSigningOut, setIsSigningOut] = useState(false);
 
   const handleSignOut = async () => {
     try {
-      await supabase.auth.signOut();
+      setIsSigningOut(true);
+      console.log('Signing out user...');
+      const { error } = await supabase.auth.signOut();
+      if (error) throw error;
+      
+      // Navigate to the auth screen regardless of auth state listener 
+      // to ensure we transition away from this screen
+      console.log('Sign out successful, redirecting to auth');
+      router.replace('/(auth)');
     } catch (error) {
       console.error('Error signing out:', error);
       Alert.alert('Error', 'Failed to sign out. Please try again.');
+    } finally {
+      setIsSigningOut(false);
     }
   };
 
@@ -62,7 +54,7 @@ export default function SettingsScreen() {
             try {
               // This would need to call a server function to delete account data
               console.log('Account deletion requested');
-              await supabase.auth.signOut();
+              await handleSignOut();
             } catch (error) {
               console.error('Error deleting account:', error);
               Alert.alert('Error', 'Failed to delete account. Please try again.');
@@ -86,19 +78,24 @@ export default function SettingsScreen() {
         <Text style={[styles.sectionTitle, { color: Colors[colorScheme ?? 'light'].text }]}>
           Account
         </Text>
-        {isSignedIn ? (
+        {user ? (
           <>
+            <Text style={[styles.accountInfo, { color: Colors[colorScheme ?? 'light'].text }]}>
+              Signed in as: {user.email}
+            </Text>
             <TouchableOpacity 
               style={[styles.button, { backgroundColor: Colors[colorScheme ?? 'light'].background }]}
               onPress={handleSignOut}
+              disabled={isSigningOut}
             >
               <Text style={[styles.buttonText, { color: Colors[colorScheme ?? 'light'].text }]}>
-                Sign Out
+                {isSigningOut ? 'Signing Out...' : 'Sign Out'}
               </Text>
             </TouchableOpacity>
             <TouchableOpacity 
               style={[styles.button, { backgroundColor: Colors[colorScheme ?? 'light'].background }]}
               onPress={handleDeleteAccount}
+              disabled={isSigningOut}
             >
               <Text style={[styles.buttonText, { color: 'red' }]}>
                 Delete Account
@@ -191,6 +188,10 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '600',
     marginBottom: 12,
+  },
+  accountInfo: {
+    marginBottom: 12,
+    fontSize: 14,
   },
   button: {
     borderRadius: 8,

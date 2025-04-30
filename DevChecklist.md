@@ -25,13 +25,13 @@ Follow each component in order. Mark tasks complete as you go (✅/⬜).
 
 3. Expo App Skeleton
 
-⬜ Initialise Expo SDK 53 project (expo init)
+✅ Initialise Expo SDK 53 project (expo init)
 
-⬜ Install Supabase JS client
+✅ Install Supabase JS client
 
-⬜ Implement email‑magic‑link sign‑in flow
+✅ Implement email/password authentication (instead of magic links)
 
-⬜ Create navigation (Stack + Tab) with screens: Home, NewEntry, Search, Settings
+✅ Create navigation (Stack + Tab) with screens: Home, NewEntry, Search, Settings
 
 4. Capture Workflow
 
